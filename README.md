@@ -107,11 +107,11 @@ interface IRequestPayload {
 type SuccessResponseData = {
   id: string
   title: string
-  type?: string | null
-  plannedStartTime?: [number, number] | null
-  plannedEndTime?: [number, number] | null
-  startTime?: [number, number] | null
-  endTime?: [number, number] | null
+  type: string | null
+  plannedStartTime: [number, number] | null
+  plannedEndTime: [number, number] | null
+  startTime: [number, number] | null
+  endTime: [number, number] | null
 }
 ```
 <hr>
