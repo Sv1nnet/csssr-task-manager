@@ -10,7 +10,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Auth = () => {
+const Auth = ({ tokenRequested }) => {
   const { link } = useStyles()
   return (
     <BrowserRouter>
@@ -26,7 +26,7 @@ const Auth = () => {
               <Route exact path={['/', '/signup']} component={SignupForm} />
               <Route exact path="/login" component={LoginForm} />
               <Route exact path="/restore-password" component={RestorePassword} />
-              <Route path="*" component={() => <Redirect to="signup" />} />
+              <Route path="*" component={() => tokenRequested ? <Redirect to="signup" /> : null} />
             </Switch>
           </Card>
         </Box>

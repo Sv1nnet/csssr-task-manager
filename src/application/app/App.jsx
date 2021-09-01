@@ -6,10 +6,10 @@ import { Auth, Profile, TaskList } from '../pages';
 import './style.scss';
 
 const App = () => {
-  const { token, fetchingToken } = useContext(AuthContext)
+  const { token, tokenRequested } = useContext(AuthContext)
   return (
     <div className="App">
-      {fetchingToken
+      {!tokenRequested
         ? <Loader />
         : token
           ? (
@@ -21,7 +21,7 @@ const App = () => {
               </Switch>
             </BrowserRouter>
           )
-          : <Auth />
+          : <Auth tokenRequested={tokenRequested} />
       }
     </div>
   );

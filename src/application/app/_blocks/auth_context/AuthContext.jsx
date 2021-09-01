@@ -1,9 +1,9 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useRef, useState } from 'react';
 import { REFRESH_TOKEN } from '../../../constants/url';
 import useFetch from '../../../utils/useFetch/useFetch';
 import mockFetch from '../../../utils/useFetch/mock';
 
-export const AuthContext = createContext({ token: null })
+export const AuthContext = createContext({ token: null, fetchingToken: true })
 
 const AuthContextProvider = ({ children }) => {
   const {
@@ -13,6 +13,8 @@ const AuthContextProvider = ({ children }) => {
   } = mockFetch(useFetch())
   /* -------------- Mock end -------------- */
   const [token, setToken] = useState(_token)
+  const [tokenRequested, setTokenRequested] = useState(false)
+  const mounted = useRef(false)
 
   // send request for an access token when the app just initialized
   useEffect(() => {
@@ -29,12 +31,21 @@ const AuthContextProvider = ({ children }) => {
           error: refresh_token ? null : { code: 401, message: 'Forbidden. No token sent.'},
         }
       /* -------------- Mock end -------------- */
-      }).then((res) => {
-        setToken(res.data)
       })
   }, [fetchGet, setToken])
 
-  return <AuthContext.Provider value={{ token, setToken, fetchingToken: fetching }}>{children}</AuthContext.Provider>
+  useEffect(() => {
+    if (mounted.current && !fetching) {
+      setToken(_token)
+      setTokenRequested(true)
+    }
+  }, [fetching, _token])
+
+  useEffect(() => {
+    mounted.current = true
+  }, [])
+
+  return <AuthContext.Provider value={{ token, setToken, tokenRequested, fetchingToken: fetching, }}>{children}</AuthContext.Provider>
 }
 
 export default AuthContextProvider
