@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from 'react';
 import { REFRESH_TOKEN } from '../../../constants/url';
 import useFetch from '../../../utils/useFetch/useFetch';
-import mockFetch from '../../../utils/mock/fetch';
+import mockFetch from '../../../utils/useFetch/mock';
 
 export const AuthContext = createContext({ token: null })
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 
 const getData = (status, parsed, type = 'json') => ({
   json: () => Promise.resolve(parsed),
@@ -18,37 +18,6 @@ const success = ({ status = 200, data = null, type, error = null, latency = 500 
     res(getData(status, { data, error }, type))
   }, latency)
 })
-
-// const getMockedHandlers = () => ({ success, error })
-
-// const mockedRoutes = {
-//   [SIGNUP]: getMockedHandlers(),
-//   [LOGIN]: getMockedHandlers(),
-//   [REFRESH_TOKEN]: getMockedHandlers(),
-//   [TASK_LIST]: getMockedHandlers(),
-//   [TASK]: getMockedHandlers(),
-// }
-
-// window.__MOCKS__ = window.__MOCKS__ || {}
-// window.__ORIGIN_API__ = window.__ORIGIN_API__ || {}
-
-// window.__ORIGIN_API__.originFetch = window.__ORIGIN_API__.originFetch || window.fetch.bind(window)
-
-// const _mockFetch = (routes) => {
-//   window.__MOCKS__.mockedRoutes = window.__MOCKS__.mockedRoutes || {}
-
-//   routes.forEach((route) => {
-//     const fullUrl = mockUrl(route)
-//     window.__MOCKS__.mockedRoutes[fullUrl] = mockedRoutes[fullUrl]
-//   })
-
-//   window.fetch = async (url, options, mockType, ...mockData) => {
-//     const _fetch = window.__MOCKS__.mockedRoutes[url]
-//     if (!_fetch) return window.__ORIGIN_API__.originFetch(url, options)
-
-//     return _fetch[mockType](...mockData)
-//   }
-// }
 
 const useMockFetch = ({
   fetchGet,

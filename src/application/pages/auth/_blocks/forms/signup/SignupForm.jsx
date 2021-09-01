@@ -2,7 +2,7 @@ import React from 'react'
 import { Form, Field } from 'react-final-form'
 import { TextField, Box, Typography, makeStyles } from '@material-ui/core'
 import { SIGNUP } from '../../../../../constants/url';
-import useMockFetch from '../../../../../utils/mock/fetch';
+import useMockFetch from '../../../../../utils/useFetch/mock';
 import useFetch from '../../../../../utils/useFetch/useFetch';
 import FormBody from '../formBody/FormBody'
 

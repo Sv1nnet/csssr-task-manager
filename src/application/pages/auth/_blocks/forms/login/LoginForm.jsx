@@ -4,7 +4,7 @@ import { TextField, Box, Typography, makeStyles } from '@material-ui/core'
 import FormBody from '../formBody/FormBody';
 import { AuthContext } from '../../../../../app/_blocks/auth_context/AuthContext';
 import { Link } from 'react-router-dom';
-import useMockFetch from '../../../../../utils/mock/fetch';
+import useMockFetch from '../../../../../utils/useFetch/mock';
 import useFetch from '../../../../../utils/useFetch/useFetch';
 import { LOGIN } from '../../../../../constants/url';
 
