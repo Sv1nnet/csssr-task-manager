@@ -4,7 +4,7 @@ import { TextField, Box, Typography, makeStyles } from '@material-ui/core'
 import { SIGNUP } from '../../../../../constants/url';
 import useMockFetch from '../../../../../utils/useFetch/mock';
 import useFetch from '../../../../../utils/useFetch/useFetch';
-import FormBody from '../formBody/FormBody'
+import { FormBody } from '../../../../../_blocks'
 
 const useStyles = makeStyles({
   message: {
@@ -23,7 +23,7 @@ const SignupForm = () => {
 
   const { message } = useStyles()
 
-  const handleSubmitRFF = async (values) => {
+  const handleSubmitRFF = async (values, { restart }) => {
     return fetchPost(SIGNUP, { body: JSON.stringify(values) }, {
       /* -------------- Mock start -------------- */
       type: 'success',
@@ -34,13 +34,10 @@ const SignupForm = () => {
       }
       /* -------------- Mock end -------------- */
     })
-  }
-
-  const handleSubmit = ({ handleSubmit: onSubmitRFF, form }) => event => onSubmitRFF(event)
     .then((res) => {
-      if (!res.error) form.restart();
-      return res
+      if (!res.error) restart();
     })
+  }
 
   const validate = (values) => {
     const error = { }
@@ -66,7 +63,7 @@ const SignupForm = () => {
         initialValues={{ login: '', password: '', confirmPassword: '' }}
         validate={validate}
         render={formProps => (
-          <form onSubmit={handleSubmit(formProps)}>
+          <form onSubmit={formProps.handleSubmit}>
             <FormBody loading={fetching} submitLabel="Sign Up">
               <Box marginBottom={2} width="100%">
                 <Field name="login" render={({ input, meta: { error, touched } }) => (

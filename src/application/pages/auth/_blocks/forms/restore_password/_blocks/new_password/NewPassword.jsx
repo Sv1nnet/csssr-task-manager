@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Field } from 'react-final-form';
 import { TextField, Box, Typography, makeStyles } from '@material-ui/core'
-import FormBody from '../../../formBody/FormBody';
+import { FormBody } from '../../../../../../../_blocks'
 import useMockFetch from '../../../../../../../utils/useFetch/mock';
 import useFetch from '../../../../../../../utils/useFetch/useFetch';
 import { UPDATE_PASSWORD } from '../../../../../../../constants/url';

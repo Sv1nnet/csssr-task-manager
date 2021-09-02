@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Form, Field } from 'react-final-form';
 import { TextField, Box, Typography, makeStyles } from '@material-ui/core'
-import FormBody from '../formBody/FormBody';
+import { FormBody } from '../../../../../_blocks'
 import { AuthContext } from '../../../../../app/_blocks/auth_context/AuthContext';
 import { Link } from 'react-router-dom';
 import useMockFetch from '../../../../../utils/useFetch/mock';
@@ -45,6 +45,7 @@ const LoginForm = () => {
         setToken(res.data)
         /* -------------- Mock start -------------- */
         localStorage.setItem('token', 'refresh_token')
+        localStorage.setItem('login', values.login)
         /* -------------- Mock end -------------- */
       })
   }

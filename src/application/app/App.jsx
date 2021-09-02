@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import { AuthContext } from './_blocks/auth_context/AuthContext';
 import { Loader } from '../_blocks'
+import { Nav } from '../layout'
 import { Auth, Profile, TaskList } from '../pages';
 import './style.scss';
 
@@ -14,6 +15,7 @@ const App = () => {
         : token
           ? (
             <BrowserRouter>
+              <Nav />
               <Switch>
                 <Route exact path="/" component={TaskList} />
                 <Route exact path="/profile" component={Profile} />
@@ -21,7 +23,7 @@ const App = () => {
               </Switch>
             </BrowserRouter>
           )
-          : <Auth tokenRequested={tokenRequested} />
+          : <Auth />
       }
     </div>
   );
