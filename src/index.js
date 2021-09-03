@@ -6,11 +6,9 @@ import reportWebVitals from './reportWebVitals';
 import AuthContextProvider from './application/app/_blocks/auth_context';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <AuthContextProvider>
-      <App />
-    </AuthContextProvider>
-  </React.StrictMode>,
+  <AuthContextProvider>
+    <App />
+  </AuthContextProvider>,
   document.getElementById('root')
 );
 

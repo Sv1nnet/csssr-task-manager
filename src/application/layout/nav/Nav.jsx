@@ -1,8 +1,23 @@
-import { Container, Box, Typography, IconButton } from '@material-ui/core'
+import { Container, Box, Typography, IconButton, AppBar, Toolbar, makeStyles } from '@material-ui/core'
 import { ExitToApp as ExitToAppIcon } from '@material-ui/icons'
 import { Link } from 'react-router-dom'
 
+const useStyles = makeStyles({
+  logoutButton: {
+    padding: 0,
+    marginLeft: 15,
+  },
+  typography: {
+    fontSize: '1.6em',
+  },
+  link: {
+    color: 'white',
+    textDecoration: 'none',
+  }
+})
+
 const Nav = () => {
+  const classes = useStyles()
   /* -------------- Mock start -------------- */
   const handleLogout = () => {
     console.log('logout')
@@ -17,25 +32,25 @@ const Nav = () => {
   }
   /* -------------- Mock end -------------- */
   return (
-    <Box component="nav" borderBottom="1px solid grey" paddingY={1}>
-      <Container>
+    <AppBar position="relative">
+      <Toolbar>
         <Box position="relative" textAlign="center" width="100%">
           <Box>
-            <Typography>
-              <Link to="/">
+            <Typography className={classes.typography}>
+              <Link className={classes.link} to="/">
                 List
               </Link>
             </Typography>
           </Box>
-          <Box position="absolute" right="0" top="0">
-            <Typography display="inline">
-              <Link to="/profile">
+          <Box position="absolute" display="flex"  alignItems="center" right="0" top="0">
+            <Typography className={classes.typography} display="inline">
+              <Link className={classes.link} to="/profile">
                 Profile
               </Link>
             </Typography>
             <IconButton
               onClick={handleLogout}
-              style={{ padding: 0, marginLeft: '15px' }}
+              className={classes.logoutButton}
               color="inherit"
               aria-label="upload picture"
               component="span"
@@ -44,8 +59,8 @@ const Nav = () => {
             </IconButton>
           </Box>
         </Box>
-      </Container>
-    </Box>
+      </Toolbar>
+    </AppBar>
   )
 }
 

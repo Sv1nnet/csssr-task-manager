@@ -4,6 +4,7 @@ const SUCCESS = 'SUCCESS'
 const ERROR = 'ERROR'
 const FETCHING = 'FETCHING'
 const TIMEOUT = 'TIMEOUT'
+const RESET_STATE = 'RESET_STATE'
 
 const defaultState = {
   GET: {
@@ -40,7 +41,7 @@ const reducer = (state = defaultState, action) => {
       data = null,
       error = null,
       method = 'GET',
-    },
+    } = {},
   } = action
 
   switch (type) {
@@ -73,6 +74,15 @@ const reducer = (state = defaultState, action) => {
             message: 'Gateway Timeout'
           },
         }
+      }
+    case RESET_STATE:
+      return ['POST', 'GET', 'PATCH', 'PUT', 'DELETE'].includes(action.payload)
+      ? {
+        ...state,
+        [action.payload]: { ...defaultState[action.payload] }
+      }
+      : {
+        ...defaultState,
       }
     default:
       return state
@@ -134,6 +144,8 @@ const useFetch = () => {
     [handleResponse],
   )
 
+  const resetState = useCallback(method => dispatch({ type: RESET_STATE, payload: method }), [dispatch])
+
   const methods = useMemo(() => ({
     GET: createFetch('GET'),
     POST: createFetch('POST'),
@@ -148,7 +160,7 @@ const useFetch = () => {
     fetchPut: methods.PUT,
     fetchPatch: methods.PATCH,
     fetchDelete: methods.DELETE,
-    createFetch,
+    resetState,
     state,
     fetching: state.fetching,
   }
