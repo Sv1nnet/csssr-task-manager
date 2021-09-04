@@ -20,7 +20,6 @@ const Nav = () => {
   const classes = useStyles()
   /* -------------- Mock start -------------- */
   const handleLogout = () => {
-    console.log('logout')
     localStorage.setItem('token', '')
     localStorage.setItem('login', '')
     localStorage.setItem('avatar', '')
@@ -28,6 +27,7 @@ const Nav = () => {
     localStorage.setItem('surname', '')
     localStorage.setItem('patronymic', '')
     localStorage.setItem('secretQuestion', '')
+    localStorage.setItem('taskList', '')
     window.location = '/'
   }
   /* -------------- Mock end -------------- */

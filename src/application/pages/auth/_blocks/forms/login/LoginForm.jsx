@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { Form, Field } from 'react-final-form';
 import { TextField, Box, Typography, makeStyles } from '@material-ui/core'
-import { FormBody } from '../../../../../_blocks'
-import { AuthContext } from '../../../../../app/_blocks/auth_context/AuthContext';
+import { FormBody } from '@blocks'
+import { AuthContext } from '@src/application/app/_blocks/auth_context/AuthContext';
 import { Link } from 'react-router-dom';
-import useMockFetch from '../../../../../utils/useFetch/mock';
-import useFetch from '../../../../../utils/useFetch/useFetch';
-import { LOGIN } from '../../../../../constants/url';
+import useMockFetch from '@utils/useFetch/mock';
+import useFetch from '@utils/useFetch/useFetch';
+import { LOGIN } from '@constants/url';
 
 const useStyles = makeStyles({
   message: {

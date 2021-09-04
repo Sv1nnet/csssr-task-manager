@@ -3,9 +3,9 @@ import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DayjsUtils from '@date-io/dayjs';
 import { AuthContext } from './_blocks/auth_context/AuthContext';
-import { Loader } from '../_blocks'
-import { Nav } from '../layout'
-import { Auth, Profile, TaskList } from '../pages';
+import { Loader } from '@blocks'
+import { Nav } from '@layout'
+import { Auth, Profile, TaskList } from '@pages';
 import './style.scss';
 
 const App = () => {

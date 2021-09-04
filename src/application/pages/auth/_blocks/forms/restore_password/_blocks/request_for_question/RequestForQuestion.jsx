@@ -1,10 +1,10 @@
 import React from 'react';
 import { Form, Field } from 'react-final-form';
 import { TextField, Box, Typography, makeStyles } from '@material-ui/core'
-import { FormBody } from '../../../../../../../_blocks'
-import useMockFetch from '../../../../../../../utils/useFetch/mock';
-import useFetch from '../../../../../../../utils/useFetch/useFetch';
-import { REQUEST_FOR_QUESTION } from '../../../../../../../constants/url';
+import { FormBody } from '@blocks'
+import useMockFetch from '@utils/useFetch/mock';
+import useFetch from '@utils/useFetch/useFetch';
+import { REQUEST_FOR_QUESTION } from '@constants/url';
 
 const useStyles = makeStyles({
   fullWidth: {

@@ -1,12 +1,13 @@
 import { Box, makeStyles, Button, Accordion, AccordionSummary, AccordionDetails } from '@material-ui/core'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { TaskForm } from '..'
-import { TASK } from '../../../../constants/url'
-import useFetch from '../../../../utils/useFetch'
-import useMockFetch from '../../../../utils/useFetch/mock'
+import { TASK } from '@constants/url'
+import useFetch from '@utils/useFetch'
+import useMockFetch from '@utils/useFetch/mock'
 
 const useStyles = makeStyles({
   accordion: {
+    marginBottom: 15,
     '&.MuiAccordion-root:before': {
       display: 'none',
     }
@@ -26,36 +27,49 @@ const useStyles = makeStyles({
     margin: 3
   },
   button: {
-    width: 90
+    width: 90,
   }
 })
 
 const CreateTaskForm = ({ fetchingList, onSuccess }) => {
   const classes = useStyles()
+  const $task = useRef()
+
   const {
     fetchPost,
+    resetState,
     state: { POST: { fetching, error, data } },
     /* -------------- Mock start -------------- */
   } = useMockFetch(useFetch())
   /* -------------- Mock end -------------- */
   const [formOpen, setFormOpen] = useState(false)
 
-  const handleOpen = () => setFormOpen(!formOpen)
+  const handleOpen = () => {
+    setFormOpen(!formOpen)
+    if (!formOpen) $task.current.$form.reset()
+    resetState('POST')
+  }
 
   const handleSubmit = (values, { restart }) => {
-    const plannedStartTime = [values.plannedTimeFrom?.hour() ?? null, values.plannedTimeFrom?.minute() ?? null]
-    const plannedEndTime = [values.plannedTimeTo?.hour() ?? null, values.plannedTimeTo?.minute() ?? null]
-    const startTime = [values.actualTimeFrom?.hour() ?? null, values.actualTimeFrom?.minute() ?? null]
-    const endTime = [values.actualTimeTo?.hour() ?? null, values.actualTimeTo?.minute() ?? null]
+    const plannedStartTime = values.plannedStartTime ? [values.plannedStartTime.hour(), values.plannedStartTime.minute()] : null
+    const plannedEndTime = values.plannedEndTime ? [values.plannedEndTime.hour(), values.plannedEndTime.minute()] : null
+    const startTime = values.startTime ? [values.startTime.hour(), values.startTime.minute()] : null
+    const endTime = values.endTime ? [values.endTime.hour(), values.endTime.minute()] : null
     
-    const { name, type } = values
+    const { name, type, description } = values
+    /* -------------- Mock start -------------- */
+    const user = localStorage.getItem('login')
+    /* -------------- Mock end -------------- */
     values = {
       name,
       type,
+      description,
+      user,
       plannedStartTime,
       plannedEndTime,
       startTime,
       endTime,
+      done: false,
     }
 
     return fetchPost(TASK, { body: JSON.stringify(values) }, {
@@ -71,28 +85,29 @@ const CreateTaskForm = ({ fetchingList, onSuccess }) => {
       .then((res) => {
         if (!res.error) {
           restart();
-          onSuccess(res);
           /* -------------- Mock start -------------- */
-          let taskList = localStorage.getItem('taskList')
+          let taskList = JSON.parse(`${localStorage.getItem('taskList')}`)
+
           if (!Array.isArray(taskList)) taskList = []
-          taskList.push(values)
+          taskList.push({ ...values, id: ('task-id-' + Date.now()) })
           localStorage.setItem('taskList', JSON.stringify(taskList))
           /* -------------- Mock end -------------- */
+          onSuccess(res);
         }
       })
   }
-  console.log('fetching create task form', fetching)
+
   return (
     <Box width="70%" margin="auto">
       <Box marginTop={2}>
-        <Button onClick={handleOpen} className={classes.button} variant="outlined" color={formOpen ? 'secondary' : 'primary'}>
+        <Button onClick={handleOpen} className={classes.button} variant="contained" color={formOpen ? 'secondary' : 'primary'}>
           {formOpen ? 'Close' : 'Create'}
         </Button>
       </Box>
       <Accordion expanded={formOpen} className={classes.accordion}>
         <AccordionSummary className={classes.summary} />
         <AccordionDetails className={classes.details}>
-          <TaskForm data={data} error={error} onSubmit={handleSubmit} submitLabel="create" fetching={fetchingList || fetching} />
+          <TaskForm ref={$task} isEdit data={data} error={error} onSubmit={handleSubmit} submitLabel="create" fetching={fetchingList || fetching} />
         </AccordionDetails>
       </Accordion>
     </Box>

@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react'
 import { Form, Field } from 'react-final-form'
-import { TextField, Box, Container, Typography, Button, Avatar, makeStyles } from '@material-ui/core'
-import { FormBody } from '../../_blocks'
-import useFetch from '../../utils/useFetch'
-import useMockFetch from '../../utils/useFetch/mock'
-import { EDIT_PROFILE, GET_PROFILE } from '../../constants/url'
+import { TextField, Box, Container, Typography, Button, Avatar, makeStyles, Card } from '@material-ui/core'
+import { FormBody } from '@blocks'
+import useFetch from '@utils/useFetch'
+import useMockFetch from '@utils/useFetch/mock'
+import { EDIT_PROFILE, GET_PROFILE } from '@constants/url'
 
 const useStyles = makeStyles({
   message: {
     width: '100%',
     paddingBottom: '.7em',
   },
+  card: {
+    marginTop: 15
+  }
 })
 
 const Profile = () => {
@@ -21,8 +24,8 @@ const Profile = () => {
     /* -------------- Mock start -------------- */
   } = useMockFetch(useFetch())
   /* -------------- Mock end -------------- */
-  const { message } = useStyles()
-  const [initialValues, setInitialValues] = useState({ })
+  const classes = useStyles()
+  const [initialValues, setInitialValues] = useState({})
   const [disabled, setDisabled] = useState(true) // disable inputs until we get user profile data
 
   const handleAvatarChange = (file, input) => {
@@ -80,7 +83,7 @@ const Profile = () => {
   }
 
   const validate = ({ password, confirmPassword, secretQuestion, answer, name, surname, patronymic }) => {
-    const error = { }
+    const error = {}
 
     const passwordMinLength = 6
 
@@ -107,7 +110,7 @@ const Profile = () => {
   }
 
   useEffect(() => {
-    fetchGet(GET_PROFILE, { }, {
+    fetchGet(GET_PROFILE, {}, {
       /* -------------- Mock start -------------- */
       type: 'success',
       latency: 1000,
@@ -131,141 +134,143 @@ const Profile = () => {
 
   return (
     <Container maxWidth="xs">
-      <Form
-        validate={validate}
-        onSubmit={handleSubmitRFF}
-        initialValues={initialValues}
-        render={formProps => (
-          <form onSubmit={formProps.handleSubmit}>
-            <FormBody loading={POST.fetching || GET.fetching} submitLabel="Save">
-              <Box marginBottom={2} width="100%">
-                <Field name="avatar" render={({ input }) => (
-                  <Button disabled={disabled} component="label">
-                    <Avatar src={input.value?.base64 || input.value} />
-                    <input
-                      onChange={e => handleAvatarChange(e.target.files[0], input)}
-                      value={input.value.files}
-                      type="file"
-                      accept=".png, .jpg, .jpeg"
-                      hidden
+      <Card className={classes.card}>
+        <Form
+          validate={validate}
+          onSubmit={handleSubmitRFF}
+          initialValues={initialValues}
+          render={formProps => (
+            <form onSubmit={formProps.handleSubmit}>
+              <FormBody loading={POST.fetching || GET.fetching} submitLabel="Save">
+                <Box marginBottom={2} width="100%">
+                  <Field name="avatar" render={({ input }) => (
+                    <Button disabled={disabled} component="label">
+                      <Avatar src={input.value?.base64 || input.value} />
+                      <input
+                        onChange={e => handleAvatarChange(e.target.files[0], input)}
+                        value={input.value.files}
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                      />
+                    </Button>
+                  )} />
+                </Box>
+                <Box marginBottom={2} width="100%">
+                  <Field name="login" render={({ input, meta: { error, touched } }) => (
+                    <TextField
+                      {...input}
+                      type="text"
+                      id="login"
+                      placeholder="Login"
+                      fullWidth
+                      disabled
+                      error={touched && !!error}
+                      helperText={touched ? error : ''}
                     />
-                  </Button>
-                )} />
-              </Box>
-              <Box marginBottom={2} width="100%">
-                <Field name="login" render={({ input, meta: { error, touched } }) => (
-                  <TextField
-                    {...input}
-                    type="text"
-                    id="login"
-                    placeholder="Login"
-                    fullWidth
-                    disabled
-                    error={touched && !!error}
-                    helperText={touched ? error : ''}
-                  />
-                )} />
-              </Box>
-              <Box marginBottom={2} width="100%">
-                <Field name="name" render={({ input, meta: { error, touched } }) => (
-                  <TextField
-                    {...input}
-                    disabled={disabled}
-                    id="name"
-                    placeholder="Name"
-                    fullWidth
-                    error={touched && !!error}
-                    helperText={touched ? error : ''}
-                  />
-                )} />
-              </Box>
-              <Box marginBottom={2} width="100%">
-                <Field name="surname" render={({ input, meta: { error, touched } }) => (
-                  <TextField
-                    {...input}
-                    disabled={disabled}
-                    id="surname"
-                    placeholder="Surname"
-                    fullWidth
-                    error={touched && !!error}
-                    helperText={touched ? error : ''}
-                  />
-                )} />
-              </Box>
-              <Box marginBottom={2} width="100%">
-                <Field name="patronymic" render={({ input, meta: { error, touched } }) => (
-                  <TextField
-                    {...input}
-                    disabled={disabled}
-                    id="patronymic"
-                    placeholder="Patronymic"
-                    fullWidth
-                    error={touched && !!error}
-                    helperText={touched ? error : ''}
-                  />
-                )} />
-              </Box>
-              <Box marginBottom={2} width="100%">
-                <Field name="secretQuestion" render={({ input, meta: { error, touched } }) => (
-                  <TextField
-                    {...input}
-                    disabled={disabled}
-                    id="secretQuestion"
-                    placeholder="Secret question"
-                    fullWidth
-                    error={touched && !!error}
-                    helperText={touched ? error : ''}
-                  />
-                )} />
-              </Box>
-              <Box marginBottom={2} width="100%">
-                <Field name="answer" render={({ input, meta: { error, touched } }) => (
-                  <TextField
-                    {...input}
-                    disabled={disabled}
-                    id="answer"
-                    autoComplete="off"
-                    placeholder="Answer"
-                    fullWidth
-                    error={touched && !!error}
-                    helperText={touched ? error : ''}
-                  />
-                )} />
-              </Box>
-              <Box marginBottom={2} width="100%">
-                <Field name="password" render={({ input, meta: { error, touched } }) => (
-                  <TextField
-                    {...input}
-                    disabled={disabled}
-                    type="password"
-                    id="password"
-                    placeholder="Password"
-                    fullWidth
-                    error={touched && !!error}
-                    helperText={touched ? error : ''}
-                  />
-                )} />
-              </Box>
-              <Box marginBottom={2} width="100%">
-                <Field name="confirmPassword" render={({ input, meta: { error, touched } }) => (
-                  <TextField
-                    {...input}
-                    disabled={disabled}
-                    type="password"
-                    id="confirm-password"
-                    placeholder="Confirm password"
-                    fullWidth
-                    error={touched && !!error}
-                    helperText={touched ? error : ''}
-                  />
-                )} />
-              </Box>
-              {POST.error && <Typography color="error" align="center" className={message}>{POST.error.message}</Typography>}
-              {POST.data && <Typography color="primary" align="center" className={message}>Profile saved</Typography>}
-            </FormBody>
-          </form>
-        )}
-      />
+                  )} />
+                </Box>
+                <Box marginBottom={2} width="100%">
+                  <Field name="name" render={({ input, meta: { error, touched } }) => (
+                    <TextField
+                      {...input}
+                      disabled={disabled}
+                      id="name"
+                      placeholder="Name"
+                      fullWidth
+                      error={touched && !!error}
+                      helperText={touched ? error : ''}
+                    />
+                  )} />
+                </Box>
+                <Box marginBottom={2} width="100%">
+                  <Field name="surname" render={({ input, meta: { error, touched } }) => (
+                    <TextField
+                      {...input}
+                      disabled={disabled}
+                      id="surname"
+                      placeholder="Surname"
+                      fullWidth
+                      error={touched && !!error}
+                      helperText={touched ? error : ''}
+                    />
+                  )} />
+                </Box>
+                <Box marginBottom={2} width="100%">
+                  <Field name="patronymic" render={({ input, meta: { error, touched } }) => (
+                    <TextField
+                      {...input}
+                      disabled={disabled}
+                      id="patronymic"
+                      placeholder="Patronymic"
+                      fullWidth
+                      error={touched && !!error}
+                      helperText={touched ? error : ''}
+                    />
+                  )} />
+                </Box>
+                <Box marginBottom={2} width="100%">
+                  <Field name="secretQuestion" render={({ input, meta: { error, touched } }) => (
+                    <TextField
+                      {...input}
+                      disabled={disabled}
+                      id="secretQuestion"
+                      placeholder="Secret question"
+                      fullWidth
+                      error={touched && !!error}
+                      helperText={touched ? error : ''}
+                    />
+                  )} />
+                </Box>
+                <Box marginBottom={2} width="100%">
+                  <Field name="answer" render={({ input, meta: { error, touched } }) => (
+                    <TextField
+                      {...input}
+                      disabled={disabled}
+                      id="answer"
+                      autoComplete="off"
+                      placeholder="Answer"
+                      fullWidth
+                      error={touched && !!error}
+                      helperText={touched ? error : ''}
+                    />
+                  )} />
+                </Box>
+                <Box marginBottom={2} width="100%">
+                  <Field name="password" render={({ input, meta: { error, touched } }) => (
+                    <TextField
+                      {...input}
+                      disabled={disabled}
+                      type="password"
+                      id="password"
+                      placeholder="Password"
+                      fullWidth
+                      error={touched && !!error}
+                      helperText={touched ? error : ''}
+                    />
+                  )} />
+                </Box>
+                <Box marginBottom={2} width="100%">
+                  <Field name="confirmPassword" render={({ input, meta: { error, touched } }) => (
+                    <TextField
+                      {...input}
+                      disabled={disabled}
+                      type="password"
+                      id="confirm-password"
+                      placeholder="Confirm password"
+                      fullWidth
+                      error={touched && !!error}
+                      helperText={touched ? error : ''}
+                    />
+                  )} />
+                </Box>
+                {POST.error && <Typography color="error" align="center" className={classes.message}>{POST.error.message}</Typography>}
+                {POST.data && <Typography color="primary" align="center" className={classes.message}>Profile saved</Typography>}
+              </FormBody>
+            </form>
+          )}
+        />
+      </Card>
     </Container>
   )
 }
