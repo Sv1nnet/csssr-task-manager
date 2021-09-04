@@ -149,6 +149,6 @@ interface IResponsePayload<T> {
 ```
 
 ## Task 2 - create front-end components with mocked back-end responses
-Made by Create-React-App
+Made with Create-React-App
 <br>
 `npm run start` - start application in dev mode
