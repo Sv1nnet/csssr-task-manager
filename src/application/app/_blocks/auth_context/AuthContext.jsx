@@ -3,7 +3,7 @@ import { REFRESH_TOKEN } from '@constants/url';
 import useFetch from '@utils/useFetch/useFetch';
 import mockFetch from '@utils/useFetch/mock';
 
-export const AuthContext = createContext({ token: null, fetchingToken: true })
+export const AuthContext = createContext({ token: null, fetchingToken: true, setToken: () => {} })
 
 const AuthContextProvider = ({ children }) => {
   const {

@@ -1,4 +1,6 @@
-import { useReducer, useCallback, useMemo } from 'react'
+import { useReducer, useCallback, useMemo, useContext } from 'react'
+import { REFRESH_TOKEN } from '@constants/url'
+import { AuthContext } from '@src/application/app/_blocks/auth_context/AuthContext'
 
 const SUCCESS = 'SUCCESS'
 const ERROR = 'ERROR'
@@ -77,13 +79,13 @@ const reducer = (state = defaultState, action) => {
       }
     case RESET_STATE:
       return ['POST', 'GET', 'PATCH', 'PUT', 'DELETE'].includes(action.payload)
-      ? {
-        ...state,
-        [action.payload]: { ...defaultState[action.payload] }
-      }
-      : {
-        ...defaultState,
-      }
+        ? {
+          ...state,
+          [action.payload]: { ...defaultState[action.payload] }
+        }
+        : {
+          ...defaultState,
+        }
     default:
       return state
   }
@@ -92,6 +94,7 @@ const reducer = (state = defaultState, action) => {
 
 const useFetch = () => {
   const [state, dispatch] = useReducer(reducer, { ...defaultState })
+  const { token, setToken } = useContext(AuthContext)
 
   const handleResponse = useCallback(async (res, method, timeoutId) => {
     if (timeoutId === null) return {
@@ -118,7 +121,7 @@ const useFetch = () => {
         data: typeof parsed === 'object' ? parsed.data : parsed,
         error: typeof parsed === 'object' ? parsed.error : null,
         status: res.status,
-        ok:  typeof parsed === 'object' ? !!parsed.error : res.ok,
+        ok: typeof parsed === 'object' ? !!parsed.error : res.ok,
       }
     }
 
@@ -136,12 +139,39 @@ const useFetch = () => {
           timeoutId = null
         }, 15000)
 
-        dispatch({ type: FETCHING, data: { method } })
-        return fetch(url, { ...options, method })
+        const doFetch = () => fetch(url, { ...options, method })
+          .then(async (res) => {
+            const parsed = await res.json()
+            if (token && parsed.error?.code === 401) { // handle 401 error
+              const refreshRes = await fetch(REFRESH_TOKEN, {}).then(_res => _res.json())
+              if (refreshRes.error?.code === 401) { // logout if refresh token request failed
+                /* -------------- Mock start -------------- */
+                localStorage.setItem('token', '')
+                localStorage.setItem('login', '')
+                localStorage.setItem('avatar', '')
+                localStorage.setItem('name', '')
+                localStorage.setItem('surname', '')
+                localStorage.setItem('patronymic', '')
+                localStorage.setItem('secretQuestion', '')
+                localStorage.setItem('taskList', '')
+                window.location = '/'
+                /* -------------- Mock end -------------- */
+                return res
+              }
+
+              setToken(refreshRes.data)
+              return doFetch()
+            }
+            return res
+          })
           .then((res) => handleResponse(res, method, timeoutId))
           .catch((err) => handleResponse(err, method, timeoutId))
+
+
+        dispatch({ type: FETCHING, data: { method } })
+        return doFetch()
       },
-    [handleResponse],
+    [handleResponse, setToken],
   )
 
   const resetState = useCallback(method => dispatch({ type: RESET_STATE, payload: method }), [dispatch])
@@ -162,7 +192,6 @@ const useFetch = () => {
     fetchDelete: methods.DELETE,
     resetState,
     state,
-    fetching: state.fetching,
   }
 }
 
