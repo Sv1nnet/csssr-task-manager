@@ -171,7 +171,7 @@ const useFetch = () => {
         dispatch({ type: FETCHING, data: { method } })
         return doFetch()
       },
-    [handleResponse, setToken],
+    [handleResponse, setToken, token],
   )
 
   const resetState = useCallback(method => dispatch({ type: RESET_STATE, payload: method }), [dispatch])
